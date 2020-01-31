@@ -6,7 +6,6 @@ Uses fuctions from ```math``` module and ```scipy.special``` (if installed).
 # Attention
 This plugin is advanced version based on Python Calculator, used personally without uploading temporarily.
 
-
 # Supported features:
 - Multi radix result with integer result(*)
 - Function docstring and autocomplete
@@ -27,7 +26,8 @@ To install the plugin, type in Wox:
 ```
 wpm install Python Calculator
 ```
-You must replace relatives file with these roject files, beacuse this project has not uploaded into offical repository.
+
+**You must replace relatives file with these project files, beacuse this project has not been uploaded into offical repository.**
 
 Install ```scipy``` to enable advanced calculations:
 ```
