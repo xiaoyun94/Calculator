@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from math import *
+from subprocess import run
 import re
 import os
-      
+
 class IntPrint:
     def __init__(self, radix, name): 
         self.radix = radix
@@ -47,7 +48,8 @@ def json_wox(title, subtitle, icon, action=None, action_params=None, action_keep
 
 def copy_to_clipboard(text):
     cmd = 'echo ' + text.strip() + '| clip'
-    os.system(cmd)
+    #os.system(cmd)
+    run(cmd, shell=True)
 
 def format_result(result):
     if hasattr(result, '__call__'):
@@ -81,7 +83,7 @@ def append_result(results, title, query, ret):
                    '{} = {}'.format(query, ret),
                    'icons/2333.jpg',
                    'change_query',
-                   [ret],
+                   [ret.replace(" ", "")],
                    True))
 
 def calculate(query): 
@@ -101,7 +103,10 @@ def calculate(query):
         else:
             formatted = format_result(result)
             append_result(results, '[{}] {}'.format('DEC', formatted), query, formatted)
-            
+            if isinstance(result, float):
+                results.extend(calculate("ceil({})".format(query)));
+                results.extend(calculate("floor({})".format(query)));
+
     except SyntaxError:
         # try to close parentheses
         opening_par = query.count('(')
@@ -138,7 +143,7 @@ class Calculator(Wox):
 
     def change_query(self, query):
         # change query and copy to clipboard after pressing enter
-        WoxAPI.change_query(query)
+        #WoxAPI.change_query(query + "=")
         copy_to_clipboard(query)
 
     def change_query_method(self, query):
