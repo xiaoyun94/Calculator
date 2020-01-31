@@ -3,10 +3,10 @@
 Advanced calculator plugin for [Wox](http://www.getwox.com/).
 Uses fuctions from ```math``` module and ```scipy.special``` (if installed).
 
-# Attention
+## Attention
 This plugin is advanced version based on Python Calculator, used personally without uploading temporarily.
 
-# Supported features:
+## Supported features:
 - Multi radix result with integer result(*)
 - Function docstring and autocomplete
 - Auto-closing parentheses
