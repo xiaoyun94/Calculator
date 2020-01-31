@@ -3,6 +3,19 @@
 from math import *
 import re
 import os
+      
+class IntPrint:
+    def __init__(self, radix, name): 
+        self.radix = radix
+        self.name = name
+
+    def format(self, num):
+        if self.radix == 16:
+            return "0x" + hex(num)[2:].upper()
+        elif self.radix == 2:
+            return bin(num)
+        else:
+            return str(num)
 
 try:
     from scipy.special import *
@@ -61,19 +74,34 @@ def format_result(result):
         return str(result)
 
 
-def calculate(query):
+int_prints = [ IntPrint(10, "DEC"), IntPrint(16, "HEX"), IntPrint(2, "BIN") ]
+
+def append_result(results, title, query, ret):
+    results.append(json_wox(title,
+                   '{} = {}'.format(query, ret),
+                   'icons/2333.jpg',
+                   'change_query',
+                   [ret],
+                   True))
+
+def calculate(query): 
     results = []
     # filter any special characters at start or end
     query = re.sub(r'(^[*/=])|([+\-*/=(]$)', '', query)
     try:
         result = eval(query)
-        formatted = format_result(result)
-        results.append(json_wox(formatted,
-                                '{} = {}'.format(query, result),
-                                'icons/app.png',
-                                'change_query',
-                                [str(result)],
-                                True))
+        
+        if isinstance(result, float) and result == int(result): # convert to type int, avoid using integer oper forcelly
+            result = int(result)
+                
+        if isinstance(result, int):
+            for int_print in int_prints:
+                formatted = int_print.format(result)
+                append_result(results, '[{}] {}'.format(int_print.name, formatted), query, formatted)
+        else:
+            formatted = format_result(result)
+            append_result(results, '[{}] {}'.format('DEC', formatted), query, formatted)
+            
     except SyntaxError:
         # try to close parentheses
         opening_par = query.count('(')
@@ -92,7 +120,7 @@ def calculate(query):
             method_help = method_eval.__doc__.split('\n')[0] if method_eval.__doc__ else ''
             results.append(json_wox(method,
                                     method_help,
-                                    'icons/app.png',
+                                    'icons/2333.jpg',
                                     'change_query_method',
                                     [str(method)],
                                     True))
